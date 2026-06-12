@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB_NAME:securevault}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET:}
+      access-token-expiraton: 900000 # 15 min
+      refresh-token-expiration: 604800000 # 7 days
