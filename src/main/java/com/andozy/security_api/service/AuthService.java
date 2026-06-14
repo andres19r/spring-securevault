@@ -1,12 +1,15 @@
 package com.andozy.security_api.service;
 
 import com.andozy.security_api.dto.AuthResponse;
+import com.andozy.security_api.dto.LoginRequest;
 import com.andozy.security_api.dto.RegisterRequest;
 import com.andozy.security_api.entity.Role;
 import com.andozy.security_api.entity.User;
 import com.andozy.security_api.exception.EmailAlreadyExistsException;
 import com.andozy.security_api.repository.UserRepository;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
         Optional<User> user = userRepository.findByEmail(request.email());
@@ -32,5 +36,14 @@ public class AuthService {
                 .build();
         userRepository.save(newUser);
         return new AuthResponse("User registered successfully");
+    }
+
+    public AuthResponse login(LoginRequest request) {
+        var authRequest = new UsernamePasswordAuthenticationToken(
+                request.email(),
+                request.password()
+        );
+        authenticationManager.authenticate(authRequest);
+        return new AuthResponse("User authenticated successfully");
     }
 }

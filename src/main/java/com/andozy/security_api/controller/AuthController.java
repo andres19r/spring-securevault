@@ -1,6 +1,7 @@
 package com.andozy.security_api.controller;
 
 import com.andozy.security_api.dto.AuthResponse;
+import com.andozy.security_api.dto.LoginRequest;
 import com.andozy.security_api.dto.RegisterRequest;
 import com.andozy.security_api.service.AuthService;
 
@@ -24,5 +25,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse userRegistered = authService.register(request);
         return new ResponseEntity<>(userRegistered, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        AuthResponse authResponse = authService.login(request);
+        return ResponseEntity.ok(authResponse);
     }
 }

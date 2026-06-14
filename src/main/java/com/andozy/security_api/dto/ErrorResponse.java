@@ -9,7 +9,7 @@ import lombok.Builder;
 @Builder
 public record ErrorResponse(
         String error,
-        String message,
+        @JsonInclude(JsonInclude.Include.NON_NULL) String message,
         @JsonInclude(JsonInclude.Include.NON_NULL) Map<String, String> errors
 ) {
 }
