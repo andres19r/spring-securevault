@@ -1,7 +1,10 @@
 package com.andozy.security_api.service;
 
+import com.andozy.security_api.auth.JwtService;
+import com.andozy.security_api.auth.SecurityUser;
 import com.andozy.security_api.dto.AuthResponse;
 import com.andozy.security_api.dto.LoginRequest;
+import com.andozy.security_api.dto.MessageResponse;
 import com.andozy.security_api.dto.RegisterRequest;
 import com.andozy.security_api.entity.Role;
 import com.andozy.security_api.entity.User;
@@ -23,8 +26,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthResponse register(RegisterRequest request) {
+    public MessageResponse register(RegisterRequest request) {
         Optional<User> user = userRepository.findByEmail(request.email());
         if (user.isPresent()) {
             throw new EmailAlreadyExistsException("Email already registered");
@@ -35,7 +39,7 @@ public class AuthService {
                 .role(Role.USER)
                 .build();
         userRepository.save(newUser);
-        return new AuthResponse("User registered successfully");
+        return new MessageResponse("User registered successfully");
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -43,7 +47,10 @@ public class AuthService {
                 request.email(),
                 request.password()
         );
-        authenticationManager.authenticate(authRequest);
-        return new AuthResponse("User authenticated successfully");
+        var authentication = authenticationManager.authenticate(authRequest);
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+        User user = securityUser.getUser();
+        String token = jwtService.generateAccessToken(user);
+        return new AuthResponse("Bearer", token);
     }
 }
