@@ -17,6 +17,10 @@ spring:
         format_sql: true
     open-in-view: false
 
+logging:
+  level:
+    com.andozy.security_api.auth.JwtAuthFilter: debug
+
 application:
   security:
     jwt:
