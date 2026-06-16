@@ -1,4 +1,4 @@
-package com.andozy.security_api.config;
+package com.andozy.security_api.data;
 
 import com.andozy.security_api.entity.Role;
 import com.andozy.security_api.entity.User;
