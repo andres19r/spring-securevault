@@ -51,6 +51,6 @@ public class AuthService {
         SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
         User user = securityUser.getUser();
         String token = jwtService.generateAccessToken(user);
-        return new AuthResponse("Bearer", token);
+        return new AuthResponse("Bearer", token, null);
     }
 }

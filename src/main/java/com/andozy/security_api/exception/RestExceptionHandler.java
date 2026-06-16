@@ -45,4 +45,13 @@ public class RestExceptionHandler {
                 .build();
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRefreshTokenException(InvalidRefreshTokenException ex) {
+        var errorDetails = ErrorResponse.builder()
+                .error("Unauthorized")
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
 }
