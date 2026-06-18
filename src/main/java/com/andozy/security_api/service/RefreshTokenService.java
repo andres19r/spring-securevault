@@ -89,4 +89,10 @@ public class RefreshTokenService {
         String newAccessToken = jwtService.generateAccessToken(token.getUser());
         return new AuthResponse("Bearer", newAccessToken, newToken.rawToken());
     }
+
+    @Transactional
+    public void revokeTokenAndFamily(String rawRefreshToken) {
+        var token = repository.findByTokenHash(sha256(rawRefreshToken));
+        token.ifPresent(refreshToken -> repository.revokeFamily(refreshToken.getFamilyId()));
+    }
 }
