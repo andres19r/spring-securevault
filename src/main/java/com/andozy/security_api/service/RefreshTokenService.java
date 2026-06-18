@@ -30,6 +30,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository repository;
     private final SecurityProperties securityProperties;
     private final JwtService jwtService;
+    private final RefreshTokenRevocationService revocationService;
 
     private String sha256(String value) {
         try {
@@ -74,7 +75,7 @@ public class RefreshTokenService {
         RefreshToken token = repository.findByTokenHash(sha256(rawRefreshToken))
                 .orElseThrow(() -> new InvalidRefreshTokenException("Invalid token"));
         if (token.isRevoked()) {
-            repository.revokeFamily(token.getFamilyId());
+            revocationService.revokeFamily(token.getFamilyId());
             log.warn("Refresh token reuse detected for family {}", token.getFamilyId());
             throw new InvalidRefreshTokenException("Invalid token");
         }
