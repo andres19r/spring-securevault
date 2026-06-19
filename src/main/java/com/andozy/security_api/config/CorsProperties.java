@@ -4,19 +4,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
-@ConfigurationProperties(prefix = "application.security.jwt")
+@ConfigurationProperties(prefix = "application.cors")
 @Validated
 @Getter
 @Setter
-public class SecurityProperties {
+public class CorsProperties {
     @NotBlank
-    private String secretKey;
-    @Positive
-    private long accessTokenExpiration;
-    @Positive
-    private long refreshTokenExpiration;
+    private String frontendUrl;
 }
