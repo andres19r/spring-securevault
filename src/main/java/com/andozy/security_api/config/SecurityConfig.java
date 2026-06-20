@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 @EnableConfigurationProperties({SecurityProperties.class, CorsProperties.class})
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
     @Bean
     public AuthenticationManager authenticationManager(final AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -42,7 +44,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint));
         return http.build();
     }
 
